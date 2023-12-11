@@ -1,4 +1,5 @@
 using RPG.Combat;
+using RPG.Core;
 using UnityEngine;
 using RPG.Movement;
 
@@ -6,6 +7,7 @@ namespace RPG.Control
 {
     public class PlayerController : MonoBehaviour
     {
+        private Health _health;
         private Mover _mover;
         private Fighter _fighter;
 
@@ -13,12 +15,14 @@ namespace RPG.Control
         {
             _mover = GetComponent<Mover>();
             _fighter = GetComponent<Fighter>();
+            _health = GetComponent<Health>();
         }
 
         private void Update()
         {
+            if (_health.IsDead) return;
             if (InteractWithCombat()) return;
-            InteractWithMovement();
+            if (InteractWithMovement()) return;
         }
 
         private bool InteractWithCombat()
@@ -27,26 +31,35 @@ namespace RPG.Control
             foreach (var raycastHit in hits)
             {
                 CombatTarget combatTarget = raycastHit.transform.GetComponent<CombatTarget>();
+                
                 if(combatTarget == null) continue;
-                if (Input.GetMouseButtonDown(0))
+                
+                if(!_fighter.CanAttack(combatTarget.gameObject)) continue;
+                
+                if (Input.GetMouseButton(0))
                 {
-                    _fighter.Attack(combatTarget);
+                    _fighter.StartAttack(combatTarget.gameObject);
                 }
                 return true;
             }
 
             return false;
         }
-        private void InteractWithMovement()
+        private bool InteractWithMovement()
         {
-            if (Input.GetMouseButton(0))
+            RaycastHit hit;
+            bool hasHit = Physics.Raycast(GetMouseRay(), out hit);
+            if (hasHit)
             {
-                MoveToCursor();
+                if (Input.GetMouseButton(0))
+                { 
+                    _mover.StartMoveAction(hit.point);
+                }
+                
+                return true;
             }
-        }
-        private void MoveToCursor()
-        {
-            _mover.MoveTo(GetMouseWorldPoint());
+
+            return false;
         }
         
         private Vector3 GetMouseWorldPoint()
