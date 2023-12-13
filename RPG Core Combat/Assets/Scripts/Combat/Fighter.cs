@@ -9,7 +9,7 @@ namespace RPG.Combat
         [SerializeField] private float weaponRange = 2f;
         [SerializeField] private float weaponDamage = 5f;
         [SerializeField] private float timeBetweenAttacks = 1f;
-        
+
         private Health target;
         private Mover _mover;
         private Animator _animator;
@@ -33,7 +33,7 @@ namespace RPG.Combat
                 }
                 else
                 {
-                    _mover.MoveTo(target.transform.position);
+                    _mover.MoveTo(target.transform.position,1f);
                 }
             }
         }
@@ -80,13 +80,13 @@ namespace RPG.Combat
         {
             GetComponent<ActionScheduler>().StartAction(this);
             target = combatTarget.GetComponent<Health>();
-            print("Take that you short, squat peasant!");
         }
         
         public void Cancel()
         {
             StopAttack();
             target = null;
+            _mover.Cancel();
         }
     }
 }
