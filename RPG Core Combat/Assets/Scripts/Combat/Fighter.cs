@@ -74,7 +74,6 @@ namespace RPG.Combat
         {
             if (target == null) return;
             target.TakeDamage(weaponDamage);
-            print("Hit");
         }
         public void StartAttack(GameObject combatTarget)
         {
