@@ -6,14 +6,17 @@ namespace RPG.Combat
 {
     public class Fighter : MonoBehaviour, IAction
     {
-        [SerializeField] private float weaponRange = 2f;
-        [SerializeField] private float weaponDamage = 5f;
         [SerializeField] private float timeBetweenAttacks = 1f;
+        [SerializeField] private Transform rightHandTransform = null;
+        [SerializeField] private Transform leftHandTransform = null;
+        [SerializeField] private Weapon defaultWeapon = null;
+        
 
         private Health target;
         private Mover _mover;
         private Animator _animator;
         private float timeSinceLastAttack = Mathf.Infinity;
+        private Weapon _currentWeapon;
 
         private void Awake()
         {
@@ -21,12 +24,17 @@ namespace RPG.Combat
             _animator = GetComponent<Animator>();
         }
 
+        private void Start()
+        {
+            EquipWeapon(defaultWeapon);
+        }
+
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
             if (target != null)
             {
-                if (Vector3.Distance(transform.position, target.transform.position) < weaponRange)
+                if (Vector3.Distance(transform.position, target.transform.position) < _currentWeapon.WeaponRange)
                 {
                     _mover.Cancel();
                     AttackBehaviour();
@@ -36,6 +44,12 @@ namespace RPG.Combat
                     _mover.MoveTo(target.transform.position,1f);
                 }
             }
+        }
+
+        public void EquipWeapon(Weapon weapon)
+        {
+            _currentWeapon = weapon;
+            _currentWeapon.Spawn(rightHandTransform,leftHandTransform,_animator);
         }
 
         private void AttackBehaviour()
@@ -73,7 +87,20 @@ namespace RPG.Combat
         private void Hit()
         {
             if (target == null) return;
-            target.TakeDamage(weaponDamage);
+            if (_currentWeapon.HasProjectile)
+            {
+                _currentWeapon.LaunchProjectile(rightHandTransform,leftHandTransform,target,_currentWeapon.WeaponDamage);
+            }
+            else
+            {
+                target.TakeDamage(_currentWeapon.WeaponDamage);
+            }
+        }
+
+        //Animation event
+        private void Shoot()
+        {
+            Hit();
         }
         public void StartAttack(GameObject combatTarget)
         {

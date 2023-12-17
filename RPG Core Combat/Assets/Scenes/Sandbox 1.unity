@@ -1295,6 +1295,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 857533390688051749, guid: 453ffa55231f4994d81e6cf4857ce637, type: 3}
+      propertyPath: uniqueIdentifier
+      value: player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288593007555485586, guid: 453ffa55231f4994d81e6cf4857ce637, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 36.42214
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288593007555485586, guid: 453ffa55231f4994d81e6cf4857ce637, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.530888
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288593007555485586, guid: 453ffa55231f4994d81e6cf4857ce637, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.362244
+      objectReference: {fileID: 0}
     - target: {fileID: 5335377080151957128, guid: 453ffa55231f4994d81e6cf4857ce637, type: 3}
       propertyPath: m_Name
       value: Core
