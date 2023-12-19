@@ -1,6 +1,4 @@
-using System;
-using System.Security.Cryptography;
-using RPG.Core;
+using RPG.Attributes;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -8,11 +6,18 @@ namespace RPG.Combat
     public class Projectile : MonoBehaviour
     {
         [SerializeField] private float speed;
+        [SerializeField] private Transform trail;
+        [SerializeField] private bool isHoming;
+        [SerializeField] private GameObject hitEffect = null;
         private Health _target;
         private float _damage = 0;
         void Update()
         {
-            transform.LookAt(GetAimLocation());
+            if (_target == null) return;
+            if (isHoming && !_target.IsDead())
+            {
+                transform.LookAt(GetAimLocation());
+            }
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
             float hitDistance = 0.1f;
         }
@@ -21,6 +26,7 @@ namespace RPG.Combat
         {
             _target = target;
             _damage = damage;
+            transform.LookAt(GetAimLocation());
         }
         private Vector3 GetAimLocation()
         {
@@ -36,7 +42,13 @@ namespace RPG.Combat
         {
             if (other.gameObject == _target.gameObject)
             {
+                if (_target.IsDead()) return;
                 _target.TakeDamage(_damage);
+                trail.SetParent(null);
+                if (hitEffect != null)
+                {
+                    Instantiate(hitEffect, GetAimLocation(),transform.rotation);
+                }
                 Destroy(gameObject);
             }
         }

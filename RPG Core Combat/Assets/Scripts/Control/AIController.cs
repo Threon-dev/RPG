@@ -1,3 +1,4 @@
+using RPG.Attributes;
 using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
@@ -38,7 +39,7 @@ namespace RPG.Control
 
         private void Update()
         {
-            if (_health.IsDead) return;
+            if (_health.IsDead()) return;
             if (InAttackRange() && _fighter.CanAttack(_player))
             {
                 _timeSinceLastSawPlayer = 0;

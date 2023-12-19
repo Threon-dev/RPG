@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RPG.Attributes;
 using RPG.Core;
 using RPG.Saving;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace RPG.Movement
 
         private void Update()
         {
-            _navMeshAgent.enabled = !_health.IsDead;
+            _navMeshAgent.enabled = !_health.IsDead();
             UpdateAnimator();
         }
 
