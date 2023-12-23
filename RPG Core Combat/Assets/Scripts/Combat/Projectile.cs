@@ -11,6 +11,7 @@ namespace RPG.Combat
         [SerializeField] private GameObject hitEffect = null;
         private Health _target;
         private float _damage = 0;
+        private GameObject _instigator = null;
         void Update()
         {
             if (_target == null) return;
@@ -22,10 +23,11 @@ namespace RPG.Combat
             float hitDistance = 0.1f;
         }
 
-        public void SetTarget(Health target,float damage)
+        public void SetTarget(Health target,GameObject instigator,float damage)
         {
             _target = target;
             _damage = damage;
+            _instigator = instigator;
             transform.LookAt(GetAimLocation());
         }
         private Vector3 GetAimLocation()
@@ -43,7 +45,7 @@ namespace RPG.Combat
             if (other.gameObject == _target.gameObject)
             {
                 if (_target.IsDead()) return;
-                _target.TakeDamage(_damage);
+                _target.TakeDamage(_instigator,_damage);
                 trail.SetParent(null);
                 if (hitEffect != null)
                 {

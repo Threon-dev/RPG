@@ -106,6 +106,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1557858695300505247}
     - target: {fileID: 3162379187270126000, guid: a55454f96d9036b4bad718b46bdc2472, type: 3}
+      propertyPath: defaultWeaponName
+      value: Unarmed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3162379187270126000, guid: a55454f96d9036b4bad718b46bdc2472, type: 3}
       propertyPath: leftHandTransform
       value: 
       objectReference: {fileID: 1557858695300447901}

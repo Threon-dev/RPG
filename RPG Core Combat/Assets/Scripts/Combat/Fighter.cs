@@ -55,6 +55,10 @@ namespace RPG.Combat
             _currentWeapon.Spawn(rightHandTransform,leftHandTransform,_animator);
         }
 
+        public Health GetTarget()
+        {
+            return target;
+        }
         private void AttackBehaviour()
         {
             if (timeSinceLastAttack >= timeBetweenAttacks)
@@ -92,11 +96,11 @@ namespace RPG.Combat
             if (target == null) return;
             if (_currentWeapon.HasProjectile)
             {
-                _currentWeapon.LaunchProjectile(rightHandTransform,leftHandTransform,target,_currentWeapon.WeaponDamage);
+                _currentWeapon.LaunchProjectile(rightHandTransform,leftHandTransform,target,_currentWeapon.WeaponDamage,gameObject);
             }
             else
             {
-                target.TakeDamage(_currentWeapon.WeaponDamage);
+                target.TakeDamage(gameObject,_currentWeapon.WeaponDamage);
             }
         }
 

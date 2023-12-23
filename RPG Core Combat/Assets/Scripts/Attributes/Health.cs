@@ -7,21 +7,36 @@ namespace RPG.Attributes
 {
     public class Health : MonoBehaviour, ISavable
     {
-        [SerializeField] private float healthPoints = 20;
+        private float _healthPoints = -1f;
 
         private bool isDead = false;
 
         private void Start()
         {
-            healthPoints = GetComponent<BaseStats>().GetHealth();
+            BaseStats baseStats = GetComponent<BaseStats>();
+            if (_healthPoints < 0)
+            { 
+                _healthPoints = baseStats.GetStat(Stat.Health);
+            }
+            baseStats.OnLevelUp += RegenerateHealth;
+        }
+        
+        public void TakeDamage(GameObject instigator, float damage)
+        {
+            _healthPoints = Mathf.Max(_healthPoints - damage, 0);
+            if (_healthPoints == 0)
+            {
+                AwardExperience(instigator);
+                Die();
+            }
         }
 
-        public void TakeDamage(float damage)
+        private void AwardExperience(GameObject instigator)
         {
-            healthPoints = Mathf.Max(healthPoints - damage, 0);
-            if (healthPoints == 0)
+            Experience experience = instigator.GetComponent<Experience>();
+            if (experience != null)
             {
-                Die();
+                experience.GainExperience(GetComponent<BaseStats>().GetStat(Stat.ExperienceReward));
             }
         }
 
@@ -32,22 +47,31 @@ namespace RPG.Attributes
             GetComponent<Animator>().SetTrigger("die");
             GetComponent<ActionScheduler>().CancelCurrentAction();
         }
+        
+        private void RegenerateHealth()
+        {
+            _healthPoints = GetComponent<BaseStats>().GetStat(Stat.Health);
+        }
 
         public object CaptureState()
         {
-            return healthPoints;
+            return _healthPoints;
         }
 
         public void RestoreState(object state)
         {
-            healthPoints = (float)state;
+            _healthPoints = (float)state;
             
-            if (healthPoints == 0)
+            if (_healthPoints == 0)
             {
                 Die();
             }
         }
 
+        public float GetPercentage()
+        {
+            return 100 * (_healthPoints / GetComponent<BaseStats>().GetStat(Stat.Health));
+        }
         public bool IsDead()
         {
             return isDead;

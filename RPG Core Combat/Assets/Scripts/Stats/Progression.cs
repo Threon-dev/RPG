@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -8,23 +9,61 @@ namespace RPG.Stats
     {
         [SerializeField] private ProgressionCharacterClass[] characterClasses = null;
 
-        public float GetHealth(CharacterClass characterClass,int level)
+
+        private Dictionary<CharacterClass, Dictionary<Stat, float[]>> lookupTable = null;
+        public float GetStat(CharacterClass characterClass,Stat stat,int level)
         {
-            foreach (var progressionClass in characterClasses)
+            BuildLookup();
+            
+            float[] levels = lookupTable[characterClass][stat];
+            if (levels.Length < level)
             {
-                if (progressionClass.characterClass == characterClass)
-                {
-                    return progressionClass.health[level - 1];
-                }
+                return 0;
             }
-            return 0;
+
+            return levels[level - 1];
+        }
+
+        public int GetLevels(CharacterClass characterClass,Stat stat)
+        {
+            BuildLookup();
+
+            float[] levels = lookupTable[characterClass][stat];
+            return levels.Length;
         }
         
+        private void BuildLookup()
+        {
+            if (lookupTable != null) return;
+
+            lookupTable = new Dictionary<CharacterClass, Dictionary<Stat, float[]>>();
+            
+            foreach (var progressionClass in characterClasses)
+            {
+                var statLookUpTable = new Dictionary<Stat, float[]>();
+
+                foreach (var progressionStat in progressionClass.stats)
+                {
+                    statLookUpTable[progressionStat.stat] = progressionStat.levels;
+                }
+                
+                lookupTable[progressionClass.characterClass] = statLookUpTable;
+            }
+        }
+
         [Serializable]
         public class ProgressionCharacterClass
         {
             public CharacterClass characterClass;
-            public float[] health;
+
+            public ProgressionStat[] stats;
+        }
+
+        [Serializable]
+        public class ProgressionStat
+        {
+            public Stat stat;
+            public float[] levels;
         }
     }
 }
