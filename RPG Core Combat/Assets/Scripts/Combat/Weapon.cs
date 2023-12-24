@@ -22,11 +22,11 @@ namespace RPG.Combat
 
         private const string weaponName = "Weapon";
 
-        public void LaunchProjectile(Transform rightHand, Transform leftHand,Health target,float damage,GameObject instigator)
+        public void LaunchProjectile(Transform rightHand, Transform leftHand,Health target,float damage,GameObject instigator,float calculatedDamage)
         {
             var handTransform = GetHandTransform(rightHand, leftHand);
             Projectile projectileInstance = Instantiate(projectile, handTransform.position,Quaternion.identity);
-            projectileInstance.SetTarget(target,instigator,damage);
+            projectileInstance.SetTarget(target,instigator,calculatedDamage);
         }
         public void Spawn(Transform rightHandTransform,Transform leftHandTransform, Animator animator)
         {
