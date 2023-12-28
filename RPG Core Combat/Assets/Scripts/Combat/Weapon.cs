@@ -1,6 +1,4 @@
-using System;
 using RPG.Attributes;
-using RPG.Core;
 using UnityEngine;
 
 namespace RPG.Combat
@@ -12,11 +10,14 @@ namespace RPG.Combat
         [SerializeField] private AnimatorOverrideController animatorOverride = null;
         [SerializeField] private float weaponRange = 2f;
         [SerializeField] private float weaponDamage = 5f;
+        [SerializeField] private float percentageBonus = 10f;
         [SerializeField] private bool isRightHand = true;
         [SerializeField] private Projectile projectile = null;
 
         public float WeaponRange => weaponRange;
         public float WeaponDamage => weaponDamage;
+
+        public float PercentageBonus => percentageBonus;
 
         public bool HasProjectile => projectile != null;
 
